@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Nayla Alzahra">
+    <title>surprise</title>
+  <style>
+      body {
+  font-family: poppins, sans-serif;
+  display: flex;              
+  flex-direction: column;     /* biar kartu muncul di bawah dadu */
+  justify-content: center;    /* center vertical */
+  align-items: center;        /* center horizontal */
+  height: 100vh;              /* penuh tinggi layar */
+  margin: 0;                 
+  background: linear-gradient(to bottom, #FFF2D0, #FFB2B2 70%, #FFB2B2);
+}
+
+    #dice {
+      font-size: 200px;
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.5s ease;
+      margin: 0 auto;
+    }
+
+    /* Animasi berputar */
+    .roll {
+      animation: spin 0.8s ease;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      50% { transform: rotate(360deg) scale(1.2); }
+      100% { transform: rotate(720deg) scale(1); }
+    }
+
+    #cards {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card {
+      width: 160px;
+      height: 230px;
+      background: #FFB2B2;
+      border: 2px solid #E36A6A;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+      font-weight: bold;
+      font-size: larger;
+      color: #FFFBF1;
+    }
+
+    .card:hover {
+      transform: scale(1.1);
+      background: #E36A6A;
+    }
+
+    /* Popup Modal */
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      left: 0;
+      top: 0;
+      width: 100%; 
+      height: 100%; 
+      background-color: rgba(0,0,0,0.5);
+      
+    }
+
+    .modal-content {
+      background-color: #FFFBF1;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .close {
+      color: #FFB2B2;
+      float: right;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #E36A6A;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="dice">🎲</div>
+
+  <div id="cards"></div>
+
+  <!-- Popup Modal -->
+  <div id="popup" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="popup-message"></p>
+    </div>
+  </div>
+
+  <script>
+  const dice = document.getElementById("dice");
+  const cardsContainer = document.getElementById("cards");
+  const popup = document.getElementById("popup");
+  const popupMessage = document.getElementById("popup-message");
+  const closeBtn = document.querySelector(".close");
+
+  const messages = [
+    "please be gentle with yourself today. i love you, i know you can do this! 💖",
+    "don't think less of yourself today, think of yourself as a whole person who is doing their best. you are doing great and i'm so proud of you! 🌟",
+    "you're loved, you're enough, you're appreciated and valued more than you know, and also you are doing the best as you can. keep going! 🌈",
+    "you’re like coffee—warm, energizing, and addictive.",
+    "are you a charger? Because you give me energy",
+    "are you a shooting star? Because you make mywishes real.",
+    "challenges are like cookies in the oven — they take time, but the result is always sweet.",
+    "remember, even Wi-Fi needs a reset sometimes — so it’s okay to pause and recharge.",
+    "chill, buddy! Life’s too short to stress over spilled milk. Just grab a cookie and keep going.",
+    "you’re like a rainbow — you brighten up even the darkest days.",
+    "if you were a vegetable, you’d be a cute-cumber! 🥒",
+    "everything will be okay in the end. if it’s not okay, it’s not the end. so keep going, you got this! 💪",
+    "you are doing amazing, sweetie! remember to take care of yourself and give yourself credit for how far you’ve come. you’re stronger than you think! 🌸",
+    "you are a wonderful person, and you deserve all the good things in life. keep being your amazing self, and don’t forget to smile! 😊",
+    "you are a shining star, and you have the power to light up the world. keep being your amazing self, and never forget how special you are! ✨",
+    "you are a beautiful soul, and you have so much to offer the world. keep being your amazing self, and never forget how loved you are! 💖",
+    "you are a unique and wonderful person, and you have so much to offer the world. keep being your amazing self, and never forget how special you are! 🌟",
+    "you are a strong and resilient person, and you have the power to overcome any challenge. keep being your amazing self, and never forget how capable you are! 💪",
+    "you are a kind and compassionate person, and you have the power to make a positive impact on the world. keep being your amazing self, and never forget how much you matter! 🌈",
+    "you are a wonderful person, and you deserve all the good things in life. keep being your amazing self, and don’t forget to smile! 😊",
+  ];
+
+  function rollDice() {
+    dice.classList.add("roll");
+
+    setTimeout(() => {
+      dice.classList.remove("roll");
+
+      const roll = Math.floor(Math.random() * 6) + 1;
+      cardsContainer.innerHTML = "";
+
+      let cardClicked = false; 
+      let openedMessage = "";  
+
+      for (let i = 1; i <= roll; i++) {
+        const card = document.createElement("div");
+        card.textContent = "Card " + i;
+        card.className = "card";
+
+        card.addEventListener("click", () => {
+          if (!cardClicked) {
+            // pertama kali klik kartu
+            cardClicked = true;
+            openedMessage = messages[(i - 1) % messages.length];
+
+            // tampilkan popup
+            popupMessage.textContent = openedMessage;
+            popup.style.display = "block";
+
+            // tutup popup → tidak langsung roll
+            closeBtn.onclick = () => {
+              popup.style.display = "none";
+            };
+
+            window.onclick = (event) => {
+              if (event.target == popup) {
+                popup.style.display = "none";
+              }
+            };
+          } else {
+            // kalau sudah ada kartu dibuka, klik kartu lain → alert + roll lagi
+            alert("oOw no.. you already opened the card. try again, sweetie!");
+            rollDice();
+          }
+        });
+
+        cardsContainer.appendChild(card);
+      }
+    }, 800);
+  }
+
+  // Klik dadu pertama kali
+  dice.addEventListener("click", rollDice);
+</script>
+
+
+</body>
+</html>
