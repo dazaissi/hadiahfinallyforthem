@@ -2,172 +2,351 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <meta name="author" content="Nayla Alzahra">
-    <title>surprise for you</title>
-<style>
-  body {
-    font-family: poppins, open-sans, sans-serif;
-    display: flex;
-    flex-direction: column;   /* stack vertically */
-    justify-content: center;  /* centre vertically */
-    align-items: center;      /* centre horizontally */
-    height: 100vh;
-    gap: 1.5rem;              /* space between children */
-    background-color: #FFF2D0;
-    background: linear-gradient(to bottom, #FFF2D0, #FFB2B2 70%, #FFB2B2);
-    overflow: hidden;
-  }
+    <meta name="theme-color" content="#FFB2B2">
+    <title>✨ welcome to the surprise! ✨</title>
+    
+    <style>
+        /* ===== RESET & VARIABLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  h1, p {
-    margin: 0;                
-  }
+        :root {
+            --cream: #FFF2D0;
+            --pink-soft: #FFD1D1;
+            --pink-light: #FFB2B2;
+            --pink-medium: #FF9E9E;
+            --pink-dark: #E36A6A;
+            --white-soft: #FFFBF1;
+            --shadow: rgba(227, 106, 106, 0.3);
+        }
 
-  h1 {
-  font-size: 80px;
-  color: #E36A6A ;
-  text-decoration: wavy underline #FFB2B2;
-  }   
+        /* ===== BODY STYLES ===== */
+        body {
+            font-family: 'Poppins', 'Open Sans', sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            background: linear-gradient(145deg, var(--cream), var(--pink-light) 70%, var(--pink-dark));
+            position: relative;
+            overflow: hidden;
+            padding: 1rem;
+        }
 
-    p {
-        font-size: 20px;
-        color: #FFF2D0;
-        font-style: italic;
-    }
+        /* ===== DECORATIONS ===== */
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.6;
+            animation: float 6s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-    .bu{
-        font-size: 20px;
-        padding: 10px 20px;
-        background-color: #E36A6A ;
-        color: #FFFBF1;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold
-    }
+        .floating-heart:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .floating-heart:nth-child(2) { top: 20%; right: 8%; animation-delay: 1s; }
+        .floating-heart:nth-child(3) { bottom: 15%; left: 10%; animation-delay: 2s; }
+        .floating-heart:nth-child(4) { bottom: 25%; right: 12%; animation-delay: 3s; }
+        .floating-heart:nth-child(5) { top: 40%; left: 15%; animation-delay: 4s; }
+        .floating-heart:nth-child(6) { top: 60%; right: 5%; animation-delay: 5s; }
+        .floating-heart:nth-child(7) { bottom: 40%; left: 20%; animation-delay: 6s; }
+        .floating-heart:nth-child(8) { bottom: 50%; right: 15%; animation-delay: 7s; }
 
-    .bu:hover {
-        background-color: #FFF2D0;
-        color: #E36A6A;
-        font-weight: bold;
-    }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
 
-    * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+        /* ===== STARS ANIMATION ===== */
+        .stars {
+            width: 2px;
+            height: 2px;
+            position: absolute;
+            background: white;
+            box-shadow: 
+                /* First layer - many stars */
+                2vw 5vh 2px white, 10vw 8vh 2px white, 15vw 15vh 1px white,
+                22vw 22vh 1px white, 28vw 12vh 2px white, 32vw 32vh 1px white,
+                38vw 18vh 2px white, 42vw 35vh 1px white, 48vw 25vh 2px white,
+                53vw 42vh 1px white, 58vw 15vh 2px white, 63vw 38vh 1px white,
+                68vw 28vh 2px white, 73vw 45vh 1px white, 78vw 32vh 2px white,
+                83vw 48vh 1px white, 88vw 20vh 2px white, 93vw 52vh 1px white,
+                98vw 35vh 2px white, 5vw 60vh 1px white, 12vw 65vh 2px white,
+                18vw 72vh 1px white, 25vw 78vh 2px white, 30vw 85vh 1px white,
+                35vw 68vh 2px white, 40vw 82vh 1px white, 45vw 92vh 2px white,
+                50vw 75vh 1px white, 55vw 88vh 2px white, 60vw 95vh 1px white,
+                65vw 72vh 2px white, 70vw 85vh 1px white, 75vw 78vh 2px white,
+                80vw 92vh 1px white, 85vw 82vh 2px white, 90vw 88vh 1px white,
+                95vw 75vh 2px white;
+            animation: twinkle 8s infinite linear;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-.stars {
-  width: 1px;
-  height: 1px;
-  position: absolute;
-  background: white;
-  box-shadow: 2vw 5vh 2px white, 10vw 8vh 2px white, 15vw 15vh 1px white,
-    22vw 22vh 1px white, 28vw 12vh 2px white, 32vw 32vh 1px white,
-    38vw 18vh 2px white, 42vw 35vh 1px white, 48vw 25vh 2px white,
-    53vw 42vh 1px white, 58vw 15vh 2px white, 63vw 38vh 1px white,
-    68vw 28vh 2px white, 73vw 45vh 1px white, 78vw 32vh 2px white,
-    83vw 48vh 1px white, 88vw 20vh 2px white, 93vw 52vh 1px white,
-    98vw 35vh 2px white, 5vw 60vh 1px white, 12vw 65vh 2px white,
-    18vw 72vh 1px white, 25vw 78vh 2px white, 30vw 85vh 1px white,
-    35vw 68vh 2px white, 40vw 82vh 1px white, 45vw 92vh 2px white,
-    50vw 75vh 1px white, 55vw 88vh 2px white, 60vw 95vh 1px white,
-    65vw 72vh 2px white, 70vw 85vh 1px white, 75vw 78vh 2px white,
-    80vw 92vh 1px white, 85vw 82vh 2px white, 90vw 88vh 1px white,
-    95vw 75vh 2px white;
-  animation: twinkle 8s infinite linear;
-}
+        .stars::after {
+            content: "";
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow: 
+                /* Second layer - more stars */
+                8vw 12vh 2px white, 16vw 18vh 1px white, 24vw 25vh 2px white,
+                33vw 15vh 1px white, 41vw 28vh 2px white, 49vw 35vh 1px white,
+                57vw 22vh 2px white, 65vw 42vh 1px white, 73vw 28vh 2px white,
+                81vw 48vh 1px white, 89vw 32vh 2px white, 97vw 45vh 1px white,
+                3vw 68vh 2px white, 11vw 75vh 1px white, 19vw 82vh 2px white,
+                27vw 88vh 1px white, 35vw 72vh 2px white, 43vw 85vh 1px white,
+                51vw 92vh 2px white, 59vw 78vh 1px white;
+            animation: twinkle 6s infinite linear reverse;
+        }
 
-.shooting-star {
-  position: absolute;
-  width: 100px;
-  height: 2px;
-  background: linear-gradient(90deg, white, transparent);
-  animation: shoot 3s infinite ease-in;
-}
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.2); }
+        }
 
-.shooting-star:nth-child(1) {
-  top: 20%;
-  left: -100px;
-  animation-delay: 0s;
-}
+        /* ===== SHOOTING STARS ===== */
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.9), rgba(255,200,200,0.6), transparent);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: shoot 4s infinite ease-out;
+            z-index: 2;
+            pointer-events: none;
+        }
 
-.shooting-star:nth-child(2) {
-  top: 35%;
-  left: -100px;
-  animation-delay: 1s;
-}
+        .shooting-star:nth-child(2) { top: 15%; left: -100px; animation-delay: 0s; }
+        .shooting-star:nth-child(3) { top: 30%; left: -100px; animation-delay: 2s; }
+        .shooting-star:nth-child(4) { top: 45%; left: -100px; animation-delay: 4s; }
+        .shooting-star:nth-child(5) { top: 60%; left: -100px; animation-delay: 6s; }
+        .shooting-star:nth-child(6) { top: 75%; left: -100px; animation-delay: 8s; }
 
-.shooting-star:nth-child(3) {
-  top: 50%;
-  left: -100px;
-  animation-delay: 2s;
-}
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0) rotate(20deg);
+                opacity: 1;
+                width: 100px;
+            }
+            70% {
+                opacity: 0.8;
+                width: 150px;
+            }
+            100% {
+                transform: translateX(120vw) translateY(30vh) rotate(20deg);
+                opacity: 0;
+                width: 50px;
+            }
+        }
 
-.x {
-  font-size: 15px;
-  color: #E36A6A;
-  font-style: italic;
-  margin-top: 20px;
-}
+        /* ===== TYPOGRAPHY ===== */
+        h1 {
+            font-size: clamp(3rem, 15vw, 5rem);
+            color: var(--pink-dark);
+            text-decoration: wavy underline var(--pink-light);
+            text-underline-offset: 15px;
+            text-align: center;
+            word-break: break-word;
+            line-height: 1.2;
+            padding: 0.5rem;
+            filter: drop-shadow(0 4px 6px rgba(227,106,106,0.3));
+            animation: glow 3s ease-in-out infinite;
+            z-index: 10;
+            position: relative;
+            text-shadow: 3px 3px 0 var(--pink-light);
+        }
 
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 0.4;
-  }
-}
+        @keyframes glow {
+            0%, 100% { text-shadow: 3px 3px 0 var(--pink-light); }
+            50% { text-shadow: 5px 5px 0 var(--pink-medium); }
+        }
 
-@keyframes shoot {
-  0% {
-    transform: translateX(0) translateY(0) rotate(25deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(120vw) translateY(50vh) rotate(25deg);
-    opacity: 0;
-  }
-}
+        p {
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            color: var(--white-soft);
+            font-style: italic;
+            text-align: center;
+            max-width: 90%;
+            margin: 0 auto;
+            text-shadow: 2px 2px 4px rgba(227,106,106,0.3);
+            line-height: 1.6;
+            z-index: 10;
+            position: relative;
+            background: rgba(255,242,208,0.2);
+            backdrop-filter: blur(5px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
 
-/* Additional twinkling stars with different animation timing */
-.stars::after {
-  content: "";
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  background: white;
-  box-shadow: 8vw 12vh 2px white, 16vw 18vh 1px white, 24vw 25vh 2px white,
-    33vw 15vh 1px white, 41vw 28vh 2px white, 49vw 35vh 1px white,
-    57vw 22vh 2px white, 65vw 42vh 1px white, 73vw 28vh 2px white,
-    81vw 48vh 1px white, 89vw 32vh 2px white, 97vw 45vh 1px white,
-    3vw 68vh 2px white, 11vw 75vh 1px white, 19vw 82vh 2px white,
-    27vw 88vh 1px white, 35vw 72vh 2px white, 43vw 85vh 1px white,
-    51vw 92vh 2px white, 59vw 78vh 1px white;
-  animation: twinkle 6s infinite linear reverse;
-}
+        .x {
+            font-size: clamp(0.8rem, 3vw, 1rem);
+            color: var(--white-soft);
+            font-style: italic;
+            margin-top: 1rem;
+            opacity: 0.9;
+            max-width: 80%;
+            background: rgba(227,106,106,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px dashed var(--pink-light);
+            z-index: 10;
+            position: relative;
+            backdrop-filter: blur(2px);
+        }
 
-</style>
+        /* ===== BUTTON STYLES ===== */
+        .bu {
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
+            padding: clamp(0.8rem, 4vw, 1.2rem) clamp(1.5rem, 8vw, 3rem);
+            background: linear-gradient(145deg, var(--pink-dark), #b14545);
+            color: var(--white-soft);
+            border: 3px solid var(--pink-light);
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 0 #8f3535, 0 15px 25px rgba(0,0,0,0.3);
+            margin: 1rem 0;
+            -webkit-tap-highlight-color: transparent;
+            min-width: 200px;
+            max-width: 90%;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 10;
+            animation: buttonPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .bu:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(145deg, var(--cream), var(--pink-light));
+            color: var(--pink-dark);
+            border-color: var(--pink-dark);
+            box-shadow: 0 12px 0 #8f3535, 0 20px 30px rgba(0,0,0,0.3);
+        }
+
+        .bu:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #8f3535, 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* ===== DECORATIVE ELEMENTS ===== */
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: white;
+            filter: blur(2px);
+            animation: sparkle 3s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .sparkle:nth-child(7) { top: 10%; left: 20%; animation-delay: 0s; }
+        .sparkle:nth-child(8) { top: 80%; right: 15%; animation-delay: 1s; }
+        .sparkle:nth-child(9) { bottom: 30%; left: 30%; animation-delay: 2s; }
+        .sparkle:nth-child(10) { bottom: 40%; right: 25%; animation-delay: 3s; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== RESPONSIVE ADJUSTMENTS ===== */
+        @media (max-width: 768px) {
+            body {
+                gap: 1rem;
+                padding: 0.5rem;
+            }
+
+            h1 {
+                text-underline-offset: 8px;
+            }
+
+            p {
+                padding: 0.5rem 1rem;
+            }
+
+            .shooting-star {
+                width: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: clamp(2.5rem, 12vw, 3.5rem);
+            }
+
+            .bu {
+                min-width: 160px;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+
+        /* ===== TOUCH DEVICE OPTIMIZATION ===== */
+        @media (hover: none) and (pointer: coarse) {
+            .bu:hover {
+                transform: none;
+                background: linear-gradient(145deg, var(--pink-dark), #b14545);
+                color: var(--white-soft);
+            }
+            
+            .bu:active {
+                transform: translateY(4px);
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Floating Hearts (sesuai tema main.html) -->
+    <div class="floating-heart">💗</div>
+    <div class="floating-heart">💖</div>
+    <div class="floating-heart">💘</div>
+    <div class="floating-heart">💝</div>
+    <div class="floating-heart">💕</div>
+    <div class="floating-heart">💓</div>
+    <div class="floating-heart">💞</div>
+    <div class="floating-heart">💗</div>
+
+    <!-- Stars & Shooting Stars -->
     <div class="stars"></div>
-<div class="shooting-star"></div>
-<div class="shooting-star"></div>
-<div class="shooting-star"></div>
-<div class="shooting-star"></div>
-<div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
 
-<h1 class="we">welcOoome!</h1>
-<br>
-<p class="ay">click the button below for the little surprise >//<</p>
+    <!-- Sparkles -->
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
 
-<input type="button" class="bu" value="click here" onclick="location.href='main.html'">
-<p class="x">(i hope you enjoy this little surprise!)</p>
+    <!-- Main Content -->
+    <h1 class="we">✨ welcOoome! ✨</h1>
+    
+    <p class="ay">click the button below for the little surprise >//<</p>
+
+    <input type="button" class="bu" value="🎲 click here 🎲" onclick="window.location.href='main.html'">
+    
+    <p class="x">(i hope you enjoy this little surprise!) 💕</p>
 </body>
-
 </html>
-
