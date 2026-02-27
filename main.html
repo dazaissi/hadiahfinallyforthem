@@ -1,204 +1,679 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Nayla Alzahra">
-    <title>surprise</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Nayla Alzahra">
+  <title>Surprise Envelope ✨</title>
+  
   <style>
-      body {
-  font-family: poppins, sans-serif;
-  display: flex;              
-  flex-direction: column;     /* biar kartu muncul di bawah dadu */
-  justify-content: center;    /* center vertical */
-  align-items: center;        /* center horizontal */
-  height: 100vh;              /* penuh tinggi layar */
-  margin: 0;                 
-  background: linear-gradient(to bottom, #FFF2D0, #FFB2B2 70%, #FFB2B2);
-}
+    /* ===== RESET & VARIABLES ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    :root {
+      --primary-pink: #FFB2B2;
+      --medium-pink: #FF9E9E;
+      --dark-pink: #FF8A8A;
+      --darker-pink: #E36A6A;
+      --cream: #FFF2D0;
+      --white-soft: #FFFBF1;
+      --shadow: rgba(0, 0, 0, 0.2);
+    }
+
+    /* ===== GLOBAL STYLES ===== */
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, var(--cream), #FFD1D1 50%, var(--primary-pink));
+    }
+
+    /* ===== DICE STYLES ===== */
     #dice {
       font-size: 200px;
       cursor: pointer;
       display: inline-block;
       transition: transform 0.5s ease;
-      margin: 0 auto;
+      filter: drop-shadow(0 10px 15px var(--shadow));
     }
 
-    /* Animasi berputar */
     .roll {
-      animation: spin 0.8s ease;
+      animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      50% { transform: rotate(360deg) scale(1.2); }
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(360deg) scale(1.3); }
       100% { transform: rotate(720deg) scale(1); }
     }
 
+    /* ===== CARDS STYLES ===== */
     #cards {
       margin-top: 40px;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 15px;
     }
 
     .card {
       width: 160px;
       height: 230px;
-      background: #FFB2B2;
-      border: 2px solid #E36A6A;
-      border-radius: 8px;
+      background: linear-gradient(145deg, var(--primary-pink), var(--medium-pink));
+      border: 3px solid var(--darker-pink);
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: transform 0.3s;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       font-weight: bold;
       font-size: larger;
-      color: #FFFBF1;
+      color: var(--white-soft);
+      box-shadow: 0 10px 0 var(--darker-pink), 0 5px 15px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before,
+    .card::after {
+      position: absolute;
+      font-size: 20px;
+      opacity: 0.5;
+    }
+
+    .card::before {
+      content: "🌟";
+      top: 10px;
+      left: 10px;
+      transform: rotate(-15deg);
+    }
+
+    .card::after {
+      content: "✨";
+      bottom: 10px;
+      right: 10px;
+      transform: rotate(15deg);
     }
 
     .card:hover {
-      transform: scale(1.1);
-      background: #E36A6A;
+      transform: translateY(-5px);
+      background: linear-gradient(145deg, var(--medium-pink), var(--dark-pink));
+      box-shadow: 0 15px 0 var(--darker-pink), 0 8px 20px var(--shadow);
     }
 
-    /* Popup Modal */
+    .card.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: grayscale(0.5);
+      transform: scale(0.95);
+    }
+
+    /* ===== MODAL STYLES ===== */
     .modal {
-      display: none; 
-      position: fixed; 
-      z-index: 1000; 
+      display: none;
+      position: fixed;
+      z-index: 1000;
       left: 0;
       top: 0;
-      width: 100%; 
-      height: 100%; 
-      background-color: rgba(0,0,0,0.5);
-      
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
     }
 
     .modal-content {
-      background-color: #FFFBF1;
-      margin: 15% auto;
+      background-color: transparent;
+      margin: 12% auto;
       padding: 20px;
-      border-radius: 8px;
-      width: 300px;
+      width: 350px;
       text-align: center;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
     }
 
+    /* ===== CLOSE BUTTON ===== */
     .close {
-      color: #FFB2B2;
-      float: right;
-      font-size: 24px;
+      color: var(--darker-pink);
+      font-size: 28px;
       font-weight: bold;
       cursor: pointer;
+      display: none;
+      background: var(--cream);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      line-height: 36px;
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      box-shadow: 0 4px 8px var(--shadow);
+      z-index: 10;
+      transition: all 0.2s ease;
+      border: 2px solid var(--primary-pink);
     }
 
     .close:hover {
-      color: #E36A6A;
+      background: var(--primary-pink);
+      color: white;
+      transform: rotate(90deg) scale(1.1);
     }
 
+    /* ===== ENVELOPE STYLES ===== */
+    .envelope {
+      width: 280px;
+      height: 200px;
+      background: linear-gradient(135deg, #FFC1C1, var(--medium-pink), var(--dark-pink));
+      margin: 20px auto;
+      position: relative;
+      cursor: pointer;
+      border-radius: 20px 20px 15px 15px;
+      perspective: 1200px;
+      border: 3px solid var(--darker-pink);
+      box-shadow: 0 20px 25px var(--shadow), 0 10px 10px rgba(0,0,0,0.15), inset 0 0 20px rgba(255,255,255,0.5);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .envelope:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 28px 30px var(--shadow), 0 15px 15px rgba(0,0,0,0.2), inset 0 0 25px rgba(255,255,255,0.6);
+    }
+
+    /* Envelope background effect */
+    .envelope::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, transparent 50%);
+      border-radius: 20px 20px 15px 15px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Envelope flap */
+    .envelope::before {
+      content: "💌";
+      position: absolute;
+      top: -45px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 140px solid transparent;
+      border-right: 140px solid transparent;
+      border-bottom: 85px solid var(--dark-pink);
+      transform-origin: top;
+      z-index: 2;
+      transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      filter: drop-shadow(0 -8px 8px var(--shadow));
+      font-size: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 0 3px 5px var(--shadow);
+      line-height: 85px;
+      border-radius: 0 0 20px 20px;
+    }
+
+    /* Envelope decorations */
+    .envelope .flap-flower {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 35px;
+      z-index: 3;
+      text-shadow: 0 2px 5px var(--shadow);
+      animation: spinFlower 6s linear infinite;
+    }
+
+    @keyframes spinFlower {
+      from { transform: translateX(-50%) rotate(0); }
+      to { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    .envelope .main-heart {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 50px;
+      z-index: 3;
+      animation: superPulse 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 5px 10px rgba(227,106,106,0.5));
+      text-shadow: 0 0 20px rgba(255,255,255,0.8);
+    }
+
+    @keyframes superPulse {
+      0%, 100% { 
+        transform: translate(-50%, -50%) scale(1); 
+        filter: drop-shadow(0 5px 10px rgba(227,106,106,0.5));
+      }
+      50% { 
+        transform: translate(-50%, -50%) scale(1.3); 
+        filter: drop-shadow(0 10px 20px rgba(227,106,106,0.8));
+      }
+    }
+
+    .envelope .cute-stamp {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      width: 50px;
+      height: 50px;
+      background: var(--cream);
+      border-radius: 50% 50% 30% 30%;
+      border: 3px dashed var(--darker-pink);
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transform: rotate(10deg);
+      opacity: 0.9;
+      box-shadow: 0 3px 6px var(--shadow);
+      animation: wiggle 2.5s ease-in-out infinite;
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(10deg); }
+      25% { transform: rotate(15deg); }
+      75% { transform: rotate(5deg); }
+    }
+
+    .envelope .ribbon {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: rgba(255,242,208,0.7);
+      border-radius: 50% 50% 0 0;
+      z-index: 2;
+      border: 2px solid var(--darker-pink);
+      border-bottom: none;
+      opacity: 0.6;
+    }
+
+    .envelope .ribbon::before,
+    .envelope .ribbon::after {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 60px;
+      background: rgba(255,242,208,0.7);
+      border: 2px solid var(--darker-pink);
+      border-radius: 30px;
+    }
+
+    .envelope .ribbon::before {
+      top: 30px;
+      left: -20px;
+      transform: rotate(-30deg);
+    }
+
+    .envelope .ribbon::after {
+      top: 30px;
+      right: -20px;
+      transform: rotate(30deg);
+    }
+
+    .envelope .star {
+      position: absolute;
+      font-size: 15px;
+      opacity: 0.6;
+      animation: twinkle 1.5s ease-in-out infinite;
+    }
+
+    .envelope .star1 { top: 20px; left: 20px; animation-delay: 0s; }
+    .envelope .star2 { bottom: 20px; left: 20px; animation-delay: 0.5s; }
+    .envelope .star3 { top: 20px; right: 20px; animation-delay: 1s; }
+    .envelope .star4 { bottom: 20px; right: 20px; animation-delay: 1.5s; }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+
+    .envelope .decor-line {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), rgba(255,255,255,0.8), transparent);
+      z-index: 3;
+      border-radius: 3px;
+    }
+
+    .envelope .line-top { top: 30px; }
+    .envelope .line-bottom { bottom: 30px; }
+
+    .envelope .message-inside {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      background: var(--white-soft);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      font-size: 14px;
+      color: var(--darker-pink);
+      z-index: 0;
+      opacity: 0;
+      border: 3px dotted var(--primary-pink);
+      box-shadow: inset 0 0 20px rgba(255,178,178,0.3);
+      font-style: italic;
+      line-height: 1.5;
+      text-align: center;
+      font-weight: 500;
+      transform: scale(0.9);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Envelope open animation */
+    @keyframes openEnvelope {
+      0% { transform: translateX(-50%) rotateX(0); }
+      50% { transform: translateX(-50%) rotateX(90deg); }
+      100% { transform: translateX(-50%) rotateX(180deg); }
+    }
+
+    .envelope.open::before {
+      animation: openEnvelope 0.8s forwards;
+      border-bottom-color: #FF6B6B;
+      content: "💖";
+    }
+
+    .envelope.open .message-inside {
+      opacity: 1;
+      transform: scale(1);
+      transition-delay: 0.4s;
+      z-index: 10;
+    }
+
+    .envelope.open .main-heart,
+    .envelope.open .cute-stamp,
+    .envelope.open .ribbon,
+    .envelope.open .star,
+    .envelope.open .decor-line,
+    .envelope.open .flap-flower {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* ===== POPUP MESSAGE STYLES ===== */
+    #popup-message {
+      background: var(--white-soft);
+      padding: 30px 25px;
+      border-radius: 30px;
+      border: 4px solid var(--primary-pink);
+      color: var(--darker-pink);
+      font-size: 16px;
+      line-height: 1.7;
+      margin-top: 20px;
+      position: relative;
+      box-shadow: 0 15px 30px var(--shadow), inset 0 0 30px rgba(255,178,178,0.3);
+      animation: messagePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-align: center;
+      word-wrap: break-word;
+      font-weight: 500;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 10px solid var(--primary-pink);
+    }
+
+    @keyframes messagePop {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-5deg);
+      }
+      70% {
+        transform: scale(1.05) rotate(2deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    #popup-message::before,
+    #popup-message::after {
+      position: absolute;
+      font-size: 40px;
+      filter: drop-shadow(0 5px 5px var(--shadow));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    #popup-message::before {
+      content: "🌸";
+      top: -20px;
+      left: -10px;
+      transform: rotate(-20deg);
+    }
+
+    #popup-message::after {
+      content: "✨";
+      bottom: -20px;
+      right: -10px;
+      transform: rotate(20deg);
+      animation-direction: reverse;
+    }
   </style>
 </head>
+
 <body>
-
-  <div id="dice">🎲</div>
-
+  <!-- Dice -->
+  <div id="dice" role="button" aria-label="Roll the dice">🎲</div>
+  
+  <!-- Cards container -->
   <div id="cards"></div>
 
   <!-- Popup Modal -->
-  <div id="popup" class="modal">
+  <div id="popup" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content">
-      <span class="close">&times;</span>
-      <p id="popup-message"></p>
+      <span class="close" role="button" aria-label="Close">&times;</span>
+      
+      <!-- Envelope stage -->
+      <div id="envelope" class="envelope">
+        <div class="flap-flower">🌸</div>
+        <div class="main-heart">💗</div>
+        <div class="cute-stamp">🐻</div>
+        <div class="ribbon"></div>
+        <div class="star star1">⭐</div>
+        <div class="star star2">⭐</div>
+        <div class="star star3">⭐</div>
+        <div class="star star4">⭐</div>
+        <div class="decor-line line-top"></div>
+        <div class="decor-line line-bottom"></div>
+        <div class="message-inside" id="envelope-message"></div>
+      </div>
+      
+      <!-- Message stage -->
+      <div id="popup-message" style="display:none;"></div>
     </div>
   </div>
 
   <script>
-  const dice = document.getElementById("dice");
-  const cardsContainer = document.getElementById("cards");
-  const popup = document.getElementById("popup");
-  const popupMessage = document.getElementById("popup-message");
-  const closeBtn = document.querySelector(".close");
+    (function() {
+      // ===== DOM ELEMENTS =====
+      const dice = document.getElementById('dice');
+      const cardsContainer = document.getElementById('cards');
+      const popup = document.getElementById('popup');
+      const popupMessage = document.getElementById('popup-message');
+      const closeBtn = document.querySelector('.close');
+      const envelope = document.getElementById('envelope');
+      const envelopeMessage = document.getElementById('envelope-message');
 
-  const messages = [
-    "please be gentle with yourself today. i love you, i know you can do this! 💖",
-    "don't think less of yourself today, think of yourself as a whole person who is doing their best. you are doing great and i'm so proud of you! 🌟",
-    "you're loved, you're enough, you're appreciated and valued more than you know, and also you are doing the best as you can. keep going! 🌈",
-    "you’re like coffee—warm, energizing, and addictive.",
-    "are you a charger? Because you give me energy",
-    "are you a shooting star? Because you make mywishes real.",
-    "challenges are like cookies in the oven — they take time, but the result is always sweet.",
-    "remember, even Wi-Fi needs a reset sometimes — so it’s okay to pause and recharge.",
-    "chill, buddy! Life’s too short to stress over spilled milk. Just grab a cookie and keep going.",
-    "you’re like a rainbow — you brighten up even the darkest days.",
-    "if you were a vegetable, you’d be a cute-cumber! 🥒",
-    "everything will be okay in the end. if it’s not okay, it’s not the end. so keep going, you got this! 💪",
-    "you are doing amazing, sweetie! remember to take care of yourself and give yourself credit for how far you’ve come. you’re stronger than you think! 🌸",
-    "you are a wonderful person, and you deserve all the good things in life. keep being your amazing self, and don’t forget to smile! 😊",
-    "you are a shining star, and you have the power to light up the world. keep being your amazing self, and never forget how special you are! ✨",
-    "you are a beautiful soul, and you have so much to offer the world. keep being your amazing self, and never forget how loved you are! 💖",
-    "you are a unique and wonderful person, and you have so much to offer the world. keep being your amazing self, and never forget how special you are! 🌟",
-    "you are a strong and resilient person, and you have the power to overcome any challenge. keep being your amazing self, and never forget how capable you are! 💪",
-    "you are a kind and compassionate person, and you have the power to make a positive impact on the world. keep being your amazing self, and never forget how much you matter! 🌈",
-    "you are a wonderful person, and you deserve all the good things in life. keep being your amazing self, and don’t forget to smile! 😊",
-  ];
+      // ===== STATE MANAGEMENT =====
+      let canClickCards = true;
+      let cardClicked = false;
 
-  function rollDice() {
-    dice.classList.add("roll");
+      // ===== MESSAGES DATA =====
+      const messages = [
+        "please be gentle with yourself today. i love you, i know you can do this! 💖",
+        "don't think less of yourself today, think of yourself as a whole person who is doing their best. you are doing great and i'm so proud of you! 🌟",
+        "you're loved, you're enough, you're appreciated and valued more than you know, and also you are doing the best as you can. keep going! 🌈",
+        "you're like coffee—warm, energizing, and addictive.",
+        "are you a charger? Because you give me energy",
+        "are you a shooting star? Because you make my wishes real.",
+        "challenges are like cookies in the oven — they take time, but the result is always sweet.",
+        "remember, even Wi-Fi needs a reset sometimes — so it's okay to pause and recharge.",
+        "chill, buddy! Life's too short to stress over spilled milk. Just grab a cookie and keep going.",
+        "you're like a rainbow — you brighten up even the darkest days.",
+        "if you were a vegetable, you'd be a cute-cumber! 🥒",
+        "everything will be okay in the end. if it's not okay, it's not the end. so keep going, you got this! 💪",
+        "you are doing amazing, sweetie! remember to take care of yourself and give yourself credit for how far you've come. you're stronger than you think! 🌸",
+        "you are a wonderful person, and you deserve all the good things in life. keep being your amazing self, and don't forget to smile! 😊",
+        "you are a shining star, and you have the power to light up the world. keep being your amazing self, and never forget how special you are! ✨",
+        "you are a beautiful soul, and you have so much to offer the world. keep being your amazing self, and never forget how loved you are! 💖",
+        "you are a unique and wonderful person, and you have so much to offer the world. keep being your amazing self, and never forget how special you are! 🌟",
+        "you are a strong and resilient person, and you have the power to overcome any challenge. keep being your amazing self, and never forget how capable you are! 💪",
+        "you are a kind and compassionate person, and you have the power to make a positive impact on the world. keep being your amazing self, and never forget how much you matter! 🌈",
+        "you just got a special will, you need to contact me to claim this :p"
+      ];
 
-    setTimeout(() => {
-      dice.classList.remove("roll");
+      // ===== UTILITY FUNCTIONS =====
+      const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      };
 
-      const roll = Math.floor(Math.random() * 6) + 1;
-      cardsContainer.innerHTML = "";
-
-      let cardClicked = false; 
-      let openedMessage = "";  
-
-      for (let i = 1; i <= roll; i++) {
-        const card = document.createElement("div");
-        card.textContent = "Card " + i;
-        card.className = "card";
-
-        card.addEventListener("click", () => {
-          if (!cardClicked) {
-            // pertama kali klik kartu
-            cardClicked = true;
-            openedMessage = messages[(i - 1) % messages.length];
-
-            // tampilkan popup
-            popupMessage.textContent = openedMessage;
-            popup.style.display = "block";
-
-            // tutup popup → tidak langsung roll
-            closeBtn.onclick = () => {
-              popup.style.display = "none";
-            };
-
-            window.onclick = (event) => {
-              if (event.target == popup) {
-                popup.style.display = "none";
-              }
-            };
-          } else {
-            // kalau sudah ada kartu dibuka, klik kartu lain → alert + roll lagi
-            alert("oOw no.. you already opened the card. try again, sweetie!");
-            rollDice();
-          }
+      // ===== CARD MANAGEMENT =====
+      const disableCards = () => {
+        canClickCards = false;
+        document.querySelectorAll('.card').forEach(card => {
+          card.classList.add('disabled');
         });
+      };
 
-        cardsContainer.appendChild(card);
-      }
-    }, 800);
-  }
+      const enableCards = () => {
+        canClickCards = true;
+        document.querySelectorAll('.card').forEach(card => {
+          card.classList.remove('disabled');
+        });
+      };
 
-  // Klik dadu pertama kali
-  dice.addEventListener("click", rollDice);
-</script>
+      // ===== POPUP MANAGEMENT =====
+      const resetPopup = (message) => {
+        popup.style.display = 'block';
+        envelope.style.display = 'block';
+        envelope.classList.remove('open');
+        popupMessage.style.display = 'none';
+        popupMessage.textContent = '';
+        envelopeMessage.textContent = message;
+        closeBtn.style.display = 'none';
+      };
 
+      const showMessage = (message) => {
+        envelope.classList.add('open');
+        
+        setTimeout(() => {
+          envelope.style.display = 'none';
+          popupMessage.textContent = message;
+          popupMessage.style.display = 'flex';
+          closeBtn.style.display = 'block';
+        }, 800);
+      };
 
+      const closePopup = () => {
+        popup.style.display = 'none';
+        disableCards();
+      };
+
+      // ===== DICE FUNCTIONALITY =====
+      const rollDice = () => {
+        // Reset state
+        canClickCards = true;
+        cardClicked = false;
+        
+        // Animate dice
+        dice.classList.remove('roll');
+        void dice.offsetWidth; // Force reflow
+        dice.classList.add('roll');
+
+        // Generate cards after animation
+        setTimeout(() => {
+          dice.classList.remove('roll');
+          const rollCount = Math.floor(Math.random() * 6) + 1;
+          cardsContainer.innerHTML = '';
+
+          const shuffledMessages = shuffleArray([...messages]);
+
+          // Create cards
+          for (let i = 1; i <= rollCount; i++) {
+            const card = document.createElement('div');
+            card.textContent = `Card ${i}`;
+            card.className = 'card';
+
+            card.addEventListener('click', () => {
+              if (!canClickCards) {
+                alert('Please roll the dice first! 🎲');
+                return;
+              }
+              
+              if (cardClicked) {
+                alert('oOw no.. you already opened a card. try again, sweetie! 🎲');
+                disableCards();
+                setTimeout(rollDice, 500);
+                return;
+              }
+              
+              // Open first card
+              cardClicked = true;
+              const openedMessage = shuffledMessages[i - 1];
+              
+              resetPopup(openedMessage);
+              
+              envelope.onclick = () => showMessage(openedMessage);
+            });
+
+            cardsContainer.appendChild(card);
+          }
+          
+          enableCards();
+        }, 800);
+      };
+
+      // ===== EVENT LISTENERS =====
+      closeBtn.onclick = closePopup;
+      
+      window.onclick = (event) => {
+        if (event.target === popup) {
+          closePopup();
+        }
+      };
+      
+      dice.addEventListener('click', rollDice);
+
+      // ===== INITIALIZATION =====
+      rollDice();
+    })();
+  </script>
 </body>
 </html>
